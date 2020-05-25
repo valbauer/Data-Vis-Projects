@@ -16,7 +16,7 @@ let state = {
 };
 
 // DATA LOAD - can us Promise.all if more than one source
-d3.csv("../data/bottom20Tracts_byCounty.csv", d3.autoType).then(data => {
+d3.csv("../data/bottom20tracts_byCounty.csv", d3.autoType).then(data => {
     console.log("data", data);
     state.data = data;
     init();

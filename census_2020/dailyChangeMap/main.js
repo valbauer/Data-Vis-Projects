@@ -1,4 +1,3 @@
-export function map() {
 
 const width = window.innerWidth * 0.9,
   height = window.innerHeight * 0.9,
@@ -226,4 +225,4 @@ function init () {
           
           })
         } 
-    }
+  
