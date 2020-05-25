@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>Census 2020 Dashboard</title>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <p>
+      <h3>25 Counties with the highest number of tracts that fall within the 20th percentile of census self-response rates by week</h3>
+      The counties in the table below represent the 25 counties per week that contain the highest number of census tracts with some of the lowest self-response rates.
+      The threshold for the 20th percentile changes each week as more and more residents respond to the census. But, some counties remain on the in list week to week. 
+      The bars highlight the difference in demographics between thetracts with low self-response rates and the overall county demographics. 
+      These tract demographics also change per week depending on which tracts fall below the 20th percentile rate. For example, in the first week of the census Los Angeles has highest number 
+      of tracts that fall below the 20th percentile for Week 1 (8.1%). The population in these tracts is 65% Hispanic, but the county itself is 48.5% Hispanic. 
+    </p>
+   
+    <h4>20th Percentile Self-Response Rate for Tracts: <span id="rate">8.1%</span></h4>
+
+      <label for="dropdownWeek">Week</label>
+      <select id="dropdownWeek" name="dropdownWeek"></select>
+     
+
+    <div id="dashboard">
+      <div id="map"></div>
+      <div id="Table"></div>
+      <div id="Barchart"></div>
+      <div id="Counter"></div>
+    </div>
+    <h5>Source: U.S. Census Bureau, 2013-2018 ACS 5 year estimates allocated to new 2020 tract geography. 
+
+    </br>All races are alone or in combination with other races/ethnicites. </h5>
+
+    <script src="../../lib/d3.js"></script>     
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

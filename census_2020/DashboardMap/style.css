@@ -1,0 +1,110 @@
+body {
+    /* ref: https://fonts.google.com/specimen/Source+Sans+Pro?selection.family=Source+Sans+Pro */
+    font-family: "Source Sans Pro", sans-serif;
+    padding: 1em 3em;
+    font-weight: lighter;
+  }
+
+  h4, h5 {
+    font-weight: lighter;
+
+  }
+  
+  #dashboard {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr, 1fr;
+    column-gap: 1em;
+  }
+  
+  #Table {
+    grid-row-start: 1;
+    grid-row-end: span 2;
+  }
+  
+  #Barchart, #Counter {
+    padding-top: .5em;
+  }
+  
+  /* Table styles */
+  thead,
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-bottom: 1px solid white;
+  }
+  
+  tbody {
+    width: 100%;
+    display: block;
+    height: 70vh;
+    overflow: scroll;
+  }
+  
+  th,
+  td {
+    text-align: left;
+    padding: 0.5em;
+    cursor: pointer;
+    font-weight: lighter;
+    text-transform: capitalize;
+  }
+  th {
+    font-size: 15px;
+  }
+  tr {
+    font-size: 14px;
+  }
+  tr:hover {
+    font-weight: 900;
+  }
+
+  g.bar.text {
+    text-align: center;
+  }
+  g.rect.text {
+    text-align: left;
+  }
+  /* Count styles */
+  #Barchart, #Counter {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .bars {
+    flex-grow: 1;
+  }
+
+  .metric {
+    flex-grow: 1; 
+    text-align: center;
+    font-size: 15px;
+  }
+  
+  .metric > .number {
+    color: #ccc;
+    font-size: 15px;
+  }
+
+  /*map stuff*/
+
+.tooltip {
+    display: block;
+    height: fit-content;
+    background-color: white;
+    opacity: 0.8;
+    pointer-events: none;
+    padding: 5px;
+}
+
+path.state {
+    fill: none;
+    stroke: gray;
+    stroke-width: 1px;
+}
+
+path.county:hover {
+    stroke: black;
+    stroke-width: 1.5px;
+}

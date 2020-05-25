@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>Census 2020 Self-Response Rates</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    
+  </head>
+  <body>
+    <h1>Census 2020 Self-Response Rates</h1>
+    <h4>For the 2020 census the Census Bureau sent mailings to nearly all households in the United States 
+      providing the household residents with options for submitting their census responses. Households in 
+      an "Internet First" area received a mailed invitation to respond online or by phone. Households in 
+      "Internet Choice" areas received a mailed questionnaire as well as instructions on how to respond 
+      online or by phone. Households in "Update/Leave" areas did not receive a mailed invitation. These
+      are areas where people tend to receive mail at PO Boxes instead of a street address, or have been 
+      impacted by recent natural disasters, or are otherwise rural who will receive a hand-delivered 
+      census packet. Parts of Alaska will be counted in-person as part of the "Update/Enumerate or Remote Alaska"
+      enumeration process  that started in January.
+    </h4>
+    <h4>The graph below shows the<!-- mail or phone--> self-response rate for counties categorized by the  
+      contact strategy employed for the plurality of households: </br><span style="color:purple">Internet First</span>, <span
+      style="color:green">Internet Choice</span>, <span style="color: orange">Update/Leave.</span>, and 
+      <span style="color: magenta">Update/Enumerate or Remote Alaska.</span>
+    </h4>
+      <label for="dropdownState">State</label>
+      <select id="dropdownState" name="dropdownState"></select>
+      
+      <label for="dropdownType">Contact Strategy</label>
+      <select id="dropdownType" name="dropdownType"></select>
+
+      <label for="dropdownResponse">Response Type</label>
+      <select id="dropdownResponse" name="dropdownResponse"></select>
+    <div id="d3-container"> </div>
+    <div>Data Source: US Census Bureau, 2020.</div>
+    <script src="../../lib/d3.js"></script>
+    <script src="main_addedDropdown.js"></script>
+    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  </body>
+</html>
