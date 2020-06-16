@@ -94,6 +94,7 @@ function zoomed() {
     g.attr("stroke-width", 1 / transform.k);
   }
 
+/* //This function will zoom into the county on click. Tried to use it to zoom to state bbox on click.
 function clicked(d) {
   const [[x0, y0], [x1, y1]] = path.bounds(d);
   console.log(state.geojson.objects.state)
@@ -106,7 +107,7 @@ function clicked(d) {
       .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
     d3.mouse(svg.node())
   );
-}
+} */
 
 function reset() {
   svg.transition().duration(750).call(
@@ -132,13 +133,13 @@ const colors = [['rgb(17,46,81)', "85% or more"],
 
 
 function init () {
-//Draw counties and states
-const geoData = topojson.feature(state.geojson, state.geojson.objects.counties).features
+  //Draw counties and states
+  const geoData = topojson.feature(state.geojson, state.geojson.objects.counties).features
 
-const projection = d3.geoAlbersUsa()
-       .fitSize([width, height], {type:"FeatureCollection", features: geoData})
+  const projection = d3.geoAlbersUsa()
+        .fitSize([width, height], {type:"FeatureCollection", features: geoData})
 
-const path = d3.geoPath().projection(projection)
+  const path = d3.geoPath().projection(projection)
 
   //Build slider for UI
   let mouseDown = false;
@@ -181,7 +182,6 @@ const path = d3.geoPath().projection(projection)
         .append("div")
         .attr("class", "tooltip")
         .style("position", "absolute")
-        //.attr("x", width - margin.right);
   
   //Create interactive legend
   const interactiveLegend = d3
@@ -254,6 +254,7 @@ const path = d3.geoPath().projection(projection)
         .append("svg")
         .attr("class", "viewBox")
         .attr("viewBox", [0, 0, width, height])
+        
 
     //Group for map
     g = svg.append("g")
@@ -298,78 +299,56 @@ const path = d3.geoPath().projection(projection)
     draw();
     };
 
-      function draw() {
+  function draw() {
 
-        //Update date for each date drawn
-        dates = Array.from(new Set(state.rates.map(d => d.dateString)))  
-        d3.select("#date").html(dates[state.dateIndex])
-        console.log("Drawing date: ", dates[state.dateIndex])
+    //Update date for each date drawn
+    dates = Array.from(new Set(state.rates.map(d => d.dateString)))  
+    d3.select("#date").html(dates[state.dateIndex])
+    console.log("Drawing date: ", dates[state.dateIndex])
+    
+    rateLookup = new Map(groupedCounties.get(dates[state.dateIndex]).map(d => [d.fips, d.crrall]))
+    
+    counties
+      .attr("fill", d => {
+        const countyFips = parseInt(d.id)
+        const countyRate = rateLookup.get(countyFips)
+      if (countyRate && state.selectedClass === null) {
+        return colorScale(countyRate) 
+        }
+      else if (countyRate && state.selectedClass !== null) {
+        return(colorScale(countyRate) === state.selectedClass[0] ? colorScale(countyRate) : "white")
+      }
+      else return "white"
+      })
+      .on("mouseover", d => {
+        const [mx,my] = d3.mouse(svg.node())
+        const countyFips = parseInt(d.id)
+        const countyRate = rateLookup.get(countyFips)
+        state.geojsonHover["County"] = d.properties.name;
+        state.geojsonHover["FIPS"] = d.id;
+        state.ratesHover["Rate"] = countyRate;
         
-        rateLookup = new Map(groupedCounties.get(dates[state.dateIndex]).map(d => [d.fips, d.crrall]))
-        
-        counties
-          .attr("fill", d => {
-            const countyFips = parseInt(d.id)
-            const countyRate = rateLookup.get(countyFips)
-          if (countyRate && state.selectedClass === null) {
-            return colorScale(countyRate) 
-            }
-          else if (countyRate && state.selectedClass !== null) {
-            return(colorScale(countyRate) === state.selectedClass[0] ? colorScale(countyRate) : "white")
-          }
-          else return "white"
-          })
-          .on("mouseover", d => {
-            const [mx,my] = d3.mouse(svg.node())
-            const countyFips = parseInt(d.id)
-            const countyRate = rateLookup.get(countyFips)
-            state.geojsonHover["County"] = d.properties.name;
-            state.geojsonHover["FIPS"] = d.id;
-            state.ratesHover["Rate"] = countyRate;
+        tooltip
+          .html(
             
-            tooltip
-              .html(
-                
-                `
-                <div>County: ${state.geojsonHover.County}</div>
-                <div>Rate: ${state.ratesHover.Rate}</div>
-  
-                `
-            )
-              .transition()
-                .duration(50)
-                //.attr("transform", `translate(${mx}, ${my})`)
-                .style("left", mx + "px")
-                .style("top", my + "px")
-          
-          })
-          .on("click", d => {
-            //const [mx,my] = d3.mouse(svg.node())
-            const countyFips = parseInt(d.id)
-            const countyRate = rateLookup.get(countyFips)
-            state.geojsonHover["County"] = d.properties.name;
-            state.geojsonHover["FIPS"] = d.id;
-            state.ratesHover["Rate"] = countyRate;
-            
-            tooltip
-              .html(
-                
-                `
-                <div>County: ${state.geojsonHover.County}</div>
-                <div>Rate: ${state.ratesHover.Rate}</div>
-  
-                `
-            )
-              .transition()
-                .duration(50)
-          
-          })
-          //This did not work for animation.
-          /* counties.transition()
-            .delay(state.delay)  
-            .duration(state.duration)
-            //.ease(d3.easeLinear(1));
-             */
-  
-      svg.call(zoom);
-    }
+            `
+            <div>County: ${state.geojsonHover.County}</div>
+            <div>Rate: ${state.ratesHover.Rate}</div>
+
+            `
+        )
+          .transition()
+            .duration(50)
+            .style("left", mx + "px")
+            .style("top", my + "px")
+      
+      })
+      //This did not work for animation.
+      /* counties.transition()
+        .delay(state.delay)  
+        .duration(state.duration)
+        //.ease(d3.easeLinear(1));
+          */
+
+  svg.call(zoom);
+}

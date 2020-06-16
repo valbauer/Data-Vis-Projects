@@ -8,9 +8,13 @@ body {
 }
 
 #d3-container {
-    position: relative;
+    position: relative;  
 }
 
+.viewBox {
+    border: .5px solid lightgray;
+    padding: 5px;
+}
 .overlay {
     fill: none;
     pointer-events: all;
@@ -37,7 +41,7 @@ body {
     color: gray;
     font-size: .75em;
     cursor: pointer;
-
+    padding: 5px;
 }
 path.state {
     fill: none;
