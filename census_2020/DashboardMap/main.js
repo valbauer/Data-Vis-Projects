@@ -18,7 +18,7 @@ let state = {
 
 // DATA LOAD - can us Promise.all if more than one source
 d3.csv("../data/bottom20Tracts_byCounty.csv", d3.autoType).then(data => {
-    console.log("data", data);
+    console.log("Dashboard data", data);
     state.data = data;
     init();
   }); 
@@ -45,13 +45,10 @@ d3.csv("../data/bottom20Tracts_byCounty.csv", d3.autoType).then(data => {
       .text(d => d);
 
     selectWeek.property("value", "Week 1");
-    console.log(state);
 
     state.filteredData = state.data.filter(d => d.week === state.selectedWeek);
 
-    console.log(state.filteredData[0].county_name)
-    console.log(state.selectedCounty)
-
+    
       table = new Table(state, setGlobalState);
       barchart = new Barchart(state, setGlobalState);
       counter = new Counter(state, setGlobalState);

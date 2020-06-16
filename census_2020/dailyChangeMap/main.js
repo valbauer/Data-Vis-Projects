@@ -129,11 +129,15 @@ function init () {
         })
         .style("padding", "5px")
         .text(d => d[1]);
+
   tooltip = d3
         .select("#d3-container")
         .append("div")
         .attr("class", "tooltip")
+        .attr("transform", 
+        `translate(${width - margin.right - margin.left}, ${margin.top}) ` )
         .style("position", "absolute");
+        
   
   svg = d3
         .select("#d3-container")
@@ -218,10 +222,10 @@ function init () {
   
                 `
             )
-              .transition()
+              /* .transition()
               .duration(50)
               .style("left", (d3.event.pageX + 15) + "px")
-              .style("top", (d3.event.pageY + 5) + "px")
+              .style("top", (d3.event.pageY + 5) + "px") */
           
           })
         } 

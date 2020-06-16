@@ -1,12 +1,15 @@
-const width = window.innerWidth * 0.9,
-  height = window.innerHeight * 0.9,
-  margin = { top: 20, bottom: 50, left: 60, right: 30 }
+const width = window.innerWidth,
+height = window.innerHeight * 0.8,
+margin = { top: 20, bottom: 50, left: 60, right: 30 }
 
 let svg;
 let state = {
     geojson: null,
     rates: null,
     dateIndex: 0,
+    duration: null,
+    delay: null,
+    selectedClass: null,
     geojsonHover: {
       County: null,
       FIPS: null,
@@ -20,10 +23,11 @@ let groupedCounties;
 let dates;
 let tooltip;
 let g;
-
+let counties;
+let states;
 
 Promise.all([
-    d3.json("../data/counties-albers-10m.json"),
+    d3.json("../data/counties-10m.json"),
     d3.csv("../data/countyRatesForLines_current.csv", d => ({
       fips: +d.fips,
       date: new Date(d.date),
@@ -79,19 +83,40 @@ function colorScale(d) {
   }
 }
 
-const path = d3.geoPath()//.projection(null)//.translate([width/2, height/2]);
-
+//https://observablehq.com/@d3/zoom-to-bounding-box
 const zoom = d3.zoom()
-  .scaleExtent([1, 5])
+  .scaleExtent([1, 12])
   .on("zoom", zoomed);
 
 function zoomed() {
     const {transform} = d3.event;
-    svg.attr("transform", transform);
-    svg.attr("stroke-width", 1 / transform.k);
+    g.attr("transform", transform);
+    g.attr("stroke-width", 1 / transform.k);
   }
 
+function clicked(d) {
+  const [[x0, y0], [x1, y1]] = path.bounds(d);
+  console.log(state.geojson.objects.state)
+  d3.event.stopPropagation();
+  svg.transition().duration(750).call(
+    zoom.transform,
+    d3.zoomIdentity
+      .translate(width / 2, height / 2)
+      .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+      .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+    d3.mouse(svg.node())
+  );
+}
 
+function reset() {
+  svg.transition().duration(750).call(
+    zoom.transform,
+    d3.zoomIdentity,
+    d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+  );
+}
+
+//Colors for legend
 const colors = [['rgb(17,46,81)', "85% or more"],
 ['rgb(49,54,149)', "74 to 85%"],
 ['rgb(69,117,180)',"68 to 74%"],
@@ -101,33 +126,141 @@ const colors = [['rgb(17,46,81)', "85% or more"],
 ['rgb(254,224,144)',"40 to 50%"],
 ['rgb(253,184,99)',"30 to 40%"],
 ['rgb(224,130,20)',"15 to 30%"],
-['rgb(179,88,6)',"15% or less"],
-['rgb(255,255,255)',"No data"]]
+['rgb(179,88,6)',"15% or less"]]
+
+//['rgb(255,255,255)',"No data"]
 
 
 function init () {
-  const slider = d3.select("#slider").on("change", function() {
-    state.dateIndex = this.value;
-    console.log(this.value)
-    draw();
-  })
+//Draw counties and states
+const geoData = topojson.feature(state.geojson, state.geojson.objects.counties).features
 
+const projection = d3.geoAlbersUsa()
+       .fitSize([width, height], {type:"FeatureCollection", features: geoData})
+
+const path = d3.geoPath().projection(projection)
+
+  //Build slider for UI
+  let mouseDown = false;
+
+  const slider = d3.select("#slider")
+    .on("mousedown", function(){
+      mouseDown = true;
+      })
+      .on("mousemove", function () {
+        if (mouseDown === true && +this.value !== state.dateIndex) {
+          state.dateIndex = +this.value;
+          d3.select("#date").html(dates[state.dateIndex])
+          state.duration = 0;
+          state.delay = 0;
+          draw();
+        }
+      })
+      .on("mouseout", function() {
+        mouseDown = false;
+      }) 
+  
+  dates = Array.from(new Set(state.rates.map(d => d.dateString)))  
+  
+  const play = d3.select("#play")
+  
+  //Couldn't figure out how to animate the map. I also tried incorporating setTimeout(), but that did not go well. 
+  /* play.on("click", function (i) {
+    //This will loop through each dateIndex and update and draw, but it does it too fast.
+    for (i = state.dateIndex; i < dates.length ; state.dateIndex++) {
+    state.duration = 5000;
+    state.delay = 5000;
+    slider.property("value", state.dateIndex);
+    console.log(state.dateIndex, state.duration, state.delay);
+    draw();
+    }
+  }); */
+  
   tooltip = d3
         .select("#d3-container")
         .append("div")
         .attr("class", "tooltip")
-        .style("position", "absolute");
+        .style("position", "absolute")
+        //.attr("x", width - margin.right);
   
-  svg = d3
+  //Create interactive legend
+  const interactiveLegend = d3
+        .select("#interactiveLegend")
+        .append("svg")
+        .attr("class", "interactiveLegend")
+        .attr("width", width)
+        .attr("height", "30px")
+        .style("position", "relative")
+  
+  const interactiveLegendSpace = (width-margin.right-margin.left)/(colors.length)
+
+  colors.forEach(function (d,i) {
+  
+    const g = interactiveLegend.append("g")
+    
+    g.append("rect")
+      .attr("class", function () {
+        return d[1]
+      })
+      .attr("height", "20px")
+      .attr("width", interactiveLegendSpace)
+      .attr("x", i * interactiveLegendSpace)
+      .style("fill", function () {
+        return d[0]
+      })
+      .style("border-style", "solid")
+      .style("border", "gray")
+
+    g.append("text")
+      .attr("class", function () {
+        return d[1]
+      })
+      .attr("x", i * interactiveLegendSpace + (interactiveLegendSpace/2))
+      .attr("y", "50%")
+      .style("text-anchor", "middle")
+      .style("fill", function () {
+        if (d[1] === "56 to 62%" || d[1] === "50 to 56%" || d[1] === "40 to 50%" || d[1] === "No data") {
+          return "gray";
+        }
+        else return "white"
+      })
+      .text(function () {
+        return d[1]})
+
+    g.attr("cursor", "pointer")
+      .on("click", function () {
+        state.selectedClass = d
+        console.log(state.selectedClass)
+        draw();
+      })
+      .on("dblclick", function () {
+        state.selectedClass = null
+        draw();
+      }
+      )
+    })  
+    
+    //Make a reset button to reset zoom of map.
+    const resetMap = d3.select("#d3-container")
+        .append("g")
+        .attr("class", "resetMap")
+
+    resetMap.append("text")
+        .text("Reset Zoom")
+        .on("click", reset)
+        
+    svg = d3
         .select("#d3-container")
         .append("svg")
+        .attr("class", "viewBox")
         .attr("viewBox", [0, 0, width, height])
-       // .attr("width", width - margin.right - margin.left)
-       // .attr("height", height - margin.bottom);
 
+    //Group for map
     g = svg.append("g")
+      .attr("class", "map")
 
-    groupedCounties = d3.group(state.rates, d => d.dateString)//.map(d => d[1])
+    //Group county rates by date
+    groupedCounties = d3.group(state.rates, d => d.dateString)
     
     dates = Array.from(new Set(state.rates.map(d => d.dateString)))  
 
@@ -138,84 +271,56 @@ function init () {
     slider.property("value", 0);
 
     rateLookup = new Map(groupedCounties.get(dates[state.dateIndex]).map(d => [d.fips, d.crrall]))
-    
-    g.append("g")
-            .attr("cursor", "pointer")
-        .selectAll(".county")
+
+    counties = g.selectAll(".county")
         .data(topojson.feature(state.geojson, state.geojson.objects.counties).features)
         .join("path")
-         .attr("d", path)
-         .attr("class", "county")
-         .attr("fill", d => {
+          //.on("click", clicked)
+          .attr("d", path)
+          .attr("class", "county")
+          .attr("fill", d => {
             const countyFips = parseInt(d.id)
             const countyRate = rateLookup.get(countyFips)
 
-            if  (countyRate){
+            if (countyRate) {
             return colorScale(countyRate) 
             }
             else return "white"
             })
 
-    //Draw states on top of counties
-    g.selectAll(".state")
+    //Draw states on top of counties for outline.
+    states = g.selectAll(".state")
       .data(topojson.feature(state.geojson, state.geojson.objects.states).features)
       .join("path")
-      .attr("d", path)
       .attr("class", "state")
-    
-    
-    //Make legend
-    const xScale = d3.scaleBand()
-      .domain(colors)
-      .rangeRound([margin.left, width - margin.right]);
-
-    const legend = d3
-        .select("#d3-container")
-        .append("div")
-        .attr("class", "legend")
-        .style("position", "absolute")
-
-    legend.append("div")
-        .attr("width", width)
-        .attr("height", "40")
-        .selectAll("g.legend")
-        .data(colors)
-        .join(
-        enter =>
-            enter
-            .append("g")
-            .attr("class", "legend")
-            .call(enter => enter.append("text"))
-    )
-
-    legend.selectAll("text")
-        .attr("x", d => xScale(d))
-        .attr("y", 10)
-        .style("background-color", d => d[0])
-        .style("color", "white")
-        .style("padding", "5px")
-        .text(d => d[1]);
+      .attr("d", path)
     
     draw();
     };
 
       function draw() {
-        
-        console.log("drawing")
-        d3.select("#date").html(dates[state.dateIndex])
 
+        //Update date for each date drawn
+        dates = Array.from(new Set(state.rates.map(d => d.dateString)))  
+        d3.select("#date").html(dates[state.dateIndex])
+        console.log("Drawing date: ", dates[state.dateIndex])
+        
         rateLookup = new Map(groupedCounties.get(dates[state.dateIndex]).map(d => [d.fips, d.crrall]))
         
-        g.selectAll(".county")
+        counties
           .attr("fill", d => {
             const countyFips = parseInt(d.id)
             const countyRate = rateLookup.get(countyFips)
-          if  (countyRate){
+          if (countyRate && state.selectedClass === null) {
             return colorScale(countyRate) 
             }
+          else if (countyRate && state.selectedClass !== null) {
+            return(colorScale(countyRate) === state.selectedClass[0] ? colorScale(countyRate) : "white")
+          }
           else return "white"
           })
-          .on("mousemove", d => {
+          .on("mouseover", d => {
+            const [mx,my] = d3.mouse(svg.node())
             const countyFips = parseInt(d.id)
             const countyRate = rateLookup.get(countyFips)
             state.geojsonHover["County"] = d.properties.name;
@@ -232,45 +337,39 @@ function init () {
                 `
             )
               .transition()
-              .duration(50)
-              .style("left", (d3.event.pageX + 15) + "px")
-              .style("top", (d3.event.pageY + 5) + "px")
+                .duration(50)
+                //.attr("transform", `translate(${mx}, ${my})`)
+                .style("left", mx + "px")
+                .style("top", my + "px")
           
-          })/* .on("click", clicked)
-              .attr("d", path) */
-         /*  .on("mouseout", function() {
-             tooltip.transition()		
-              .duration(300)		
-              .style("visibility", "hidden");
-      }) */
+          })
+          .on("click", d => {
+            //const [mx,my] = d3.mouse(svg.node())
+            const countyFips = parseInt(d.id)
+            const countyRate = rateLookup.get(countyFips)
+            state.geojsonHover["County"] = d.properties.name;
+            state.geojsonHover["FIPS"] = d.id;
+            state.ratesHover["Rate"] = countyRate;
+            
+            tooltip
+              .html(
+                
+                `
+                <div>County: ${state.geojsonHover.County}</div>
+                <div>Rate: ${state.ratesHover.Rate}</div>
+  
+                `
+            )
+              .transition()
+                .duration(50)
+          
+          })
+          //This did not work for animation.
+          /* counties.transition()
+            .delay(state.delay)  
+            .duration(state.duration)
+            //.ease(d3.easeLinear(1));
+             */
+  
       svg.call(zoom);
-
-
-      // zoom to bounding box tutorial:
-  // https://observablehq.com/@d3/zoom-to-bounding-box
-    /* function reset() {
-      svg.transition().duration(750).call(
-        zoom.transform,
-        d3.zoomIdentity,
-        d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
-      );
-    } */
-
-  /*   function clicked(d) {
-      const [[x0, y0], [x1, y1]] = path.bounds(d);
-      d3.event.stopPropagation();
-      svg.transition().duration(250).call(
-        zoom.transform,
-        d3.zoomIdentity
-          .translate(width / 2, height / 2)
-          .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
-          .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-        d3.mouse(svg.node())
-      );
-    } */
-
-
-    return svg.node();
-
- 
     }

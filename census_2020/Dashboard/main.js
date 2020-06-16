@@ -1,7 +1,7 @@
 // IMPORT
 import { Table } from "./Table.js"
 import { Barchart } from "./Barchart.js"
-import { Counter } from "./Counter.js"
+//import { Counter } from "./Counter.js"
 
 // GLOBAL CONSTANTS
 let table, barchart, counter
@@ -12,7 +12,6 @@ let state = {
   filteredData: [],
   selectedWeek: "Week 1",
   selectedCounty: "Los Angeles",
-  selectedMetric: "c_pct_whitealoneorcombo",
 };
 
 // DATA LOAD - can us Promise.all if more than one source
@@ -29,7 +28,6 @@ d3.csv("../data/bottom20tracts_byCounty.csv", d3.autoType).then(data => {
       // 'this.value' holds the dropdown value a user just selected
       state.selectedWeek = this.value
       state.selectedCounty = "Los Angeles";
-      state.selectedMetric = "c_pct_whitealoneorcombo";
       console.log("new week is", this.value);
       draw();
     });
@@ -51,7 +49,7 @@ d3.csv("../data/bottom20tracts_byCounty.csv", d3.autoType).then(data => {
 
       table = new Table(state, setGlobalState);
       barchart = new Barchart(state, setGlobalState);
-      counter = new Counter(state, setGlobalState);
+      //counter = new Counter(state, setGlobalState);
       
       draw();
   }
@@ -65,7 +63,7 @@ d3.csv("../data/bottom20tracts_byCounty.csv", d3.autoType).then(data => {
 
       table.draw(state, setGlobalState);
       barchart.draw(state, setGlobalState);
-      counter.draw(state, setGlobalState);
+      //counter.draw(state, setGlobalState);
 
   }
 

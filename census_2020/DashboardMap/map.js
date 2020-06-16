@@ -42,7 +42,7 @@ Promise.all([
     // + SET STATE WITH DATA
     state.geojson = geojson;
     state.rates = rates;
-    console.log("state: ", state);
+    console.log("Map state: ", state);
     init();
   });
 
@@ -187,7 +187,6 @@ function init () {
 
       function draw() {
         
-        console.log("drawing")
         d3.select("#date").html(dates[state.dateIndex])
 
         rateLookup = new Map(groupedCounties.get(dates[state.dateIndex]).map(d => [d.fips, d.crrall]))

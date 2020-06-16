@@ -22,7 +22,7 @@ body {
     grid-row-end: span 2;
   }
   
-  #Barchart, #Counter {
+  #Barchart {
     padding-top: .5em;
   }
   
@@ -67,7 +67,7 @@ body {
     text-align: left;
   }
   /* Count styles */
-  #Barchart, #Counter {
+  #Barchart {
     display: flex;
     flex-direction: row;
   }
@@ -76,7 +76,7 @@ body {
     flex-grow: 1;
   }
 
-  .metric {
+  /* .metric {
     flex-grow: 1; 
     text-align: center;
     font-size: 15px;
@@ -87,3 +87,4 @@ body {
     font-size: 15px;
   }
 
+ */

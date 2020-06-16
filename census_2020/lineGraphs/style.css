@@ -23,7 +23,17 @@ body {
   }
 
   .trend:hover {
+    stroke-width: 10px;
+    cursor: pointer;
+  }
+
+  .trend.notSelected {
+    opacity: .5;
+  }
+
+  .trend.selectedCounty {
     stroke:rgb(58, 57, 57);
+    fill: none;
     stroke-width: 5px;
   }
 
@@ -39,4 +49,15 @@ body {
 .tooltipLine {
   stroke: gray; 
   stroke-width: 2px;
+}
+
+.eventLines {
+  stroke: gray;
+  stroke-width: 1px;
+  stroke-dasharray: 3,3;
+}
+
+.eventText {
+  font-size: 15px;
+  fill: gray;
 }

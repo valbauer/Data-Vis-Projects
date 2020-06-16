@@ -1,12 +1,25 @@
 body {
     /* ref: https://fonts.google.com/specimen/Source+Sans+Pro?selection.family=Source+Sans+Pro */
-    font-family: "Source Sans Pro", sans-serif;
+    font-family: "Roboto", sans-serif;
     padding: 1em 3em;
   }
 .legend {
     margin: 0 auto;
 }
 
+#d3-container {
+    position: relative;
+}
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+    cursor: ew-resize;
+}
+
+.dateLabel {
+    fill: gray;
+}
 
 .tooltip {
     display: block;
@@ -16,9 +29,19 @@ body {
     pointer-events: none;
     padding: 5px;
 }
+.interactiveLegend {
+    padding: 10px 5px;
+}
 
+.resetMap {
+    color: gray;
+    font-size: .75em;
+    cursor: pointer;
+
+}
 path.state {
     fill: none;
+    /* fill-opacity: 0; */
     stroke: gray;
     stroke-width: 1px;
 }

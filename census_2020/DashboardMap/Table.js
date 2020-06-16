@@ -1,6 +1,6 @@
 class Table {
     constructor(state, setGlobalState) {
-        console.log("TABLE:", state.filteredData)
+        console.log("Filtered Dashboard:", state.filteredData)
         this.slimmedData = state.filteredData.map(d => ({
             "County": d.county_name,
             "State": d.st_usps,

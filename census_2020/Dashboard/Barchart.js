@@ -1,8 +1,8 @@
 class Barchart {
     constructor(state, setGlobalState) {
         this.width = window.innerWidth * 0.6;
-        this.height = window.innerHeight * 0.7;
-        this.margins = { top: 20, bottom: 20, left: 1, right: 1 };
+        this.height = window.innerHeight * 0.77;
+        this.margins = { top: 20, bottom: 10, left: 1, right: 1 };
         this.duration = 1000;
         this.format = d3.format(",." + d3.precisionFixed(1) + "f");
 
@@ -30,7 +30,7 @@ class Barchart {
                 county: state.selectedCounty,
                 metric: metric,
                 value: filteredData ? filteredData[metric] : 0,
-                selectedMetric: null
+                //selectedMetric: null
             };
         });
 
@@ -83,9 +83,9 @@ class Barchart {
                         .call(enter => enter.append("text")),
                 update => update,
                 exit => exit.remove()
-            ).on("click", d => {
+            )/* .on("click", d => {
                 setGlobalState({ selectedMetric: d.metric });
-            })
+            }) */
 
         bars
             .select("rect")
@@ -99,10 +99,7 @@ class Barchart {
             })
             .attr("height", d => this.height - yScale(d.value))
             .style("fill", function(d) {
-                if (d.metric === state.selectedMetric) {
-                    return "gray";
-                }
-                else if (d.metric.startsWith("c_")) {
+                if (d.metric.startsWith("c_")) {
                     return "#385d75"
                 }
                 else {return "#b5d3e7"}
@@ -117,6 +114,35 @@ class Barchart {
             .attr("x", function(d, i) { 
                 return i % 2 !== 0 ? xScale(d.metric) : xScale(d.metric) + 8;
             })
+
+        const barLabelList = ["White", "Black", "American Indian", "Asian", "Hispanic", "Foreign Born", "In Poverty"]
+        
+        const xScaleLabels = d3
+            .scaleBand()
+            .domain(barLabelList)
+            .range([this.margins.left, this.width - this.margins.right])
+            .paddingInner(.075);
+
+        console.log(xScaleLabels("White"))
+
+        const barLabels = this.svg
+            .selectAll("g.labels")  
+            .data(barLabelList)
+            .join(
+                enter =>
+                    enter
+                    .append("g")
+                    //.attr("class", "labels")
+                    .call(enter => enter.append("text")))
+                
+
+        barLabels
+            .selectAll("text")
+            .attr("y", this.height)
+            .attr("x", d => xScaleLabels(d) + 5)
+            .text(d => d)
+        
+
     }
 }
 
