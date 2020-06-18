@@ -55,3 +55,8 @@ path.county:hover {
     stroke-width: 1.5px;
 }
 
+path.county:clicked {
+    stroke: black;
+    stroke-width: 1.5px;
+}
+

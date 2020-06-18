@@ -28,7 +28,7 @@ let states;
 
 Promise.all([
     d3.json("../data/counties-10m.json"),
-    d3.csv("../data/countyRatesForLines_current.csv", d => ({
+    d3.csv("../data/countyRatesForMap_current.csv", d => ({
       fips: +d.fips,
       date: new Date(d.date),
       dateString: d.date,
@@ -38,9 +38,9 @@ Promise.all([
       drrint: +d.drrint,
       stateName: d.stateName,
       countyName: d.countyName,
-      firstGTChoice: +d.firstGTChoice,
+      /* firstGTChoice: +d.firstGTChoice,
       choiceGTFirst: +d.choiceGTFirst,
-      ulAboveAvg: +d.ulAboveAvg
+      ulAboveAvg: +d.ulAboveAvg */
     })),
   ]).then(([geojson, rates]) => {
     // + SET STATE WITH DATA
@@ -131,7 +131,6 @@ const colors = [['rgb(17,46,81)', "85% or more"],
 
 //['rgb(255,255,255)',"No data"]
 
-
 function init () {
   //Draw counties and states
   const geoData = topojson.feature(state.geojson, state.geojson.objects.counties).features
@@ -163,19 +162,30 @@ function init () {
   
   dates = Array.from(new Set(state.rates.map(d => d.dateString)))  
   
-  const play = d3.select("#play")
-  
+  //Maybe a loop function then a setTimeout or setInterval?
+  function loop (i) {
+    i = state.dateIndex; 
+    while (i < dates.length) {
+      slider.property("value", state.dateIndex);
+      console.log(state.dateIndex, state.duration, state.delay);
+      draw();
+      state.dateIndex++;
+    }  
+   }
+
   //Couldn't figure out how to animate the map. I also tried incorporating setTimeout(), but that did not go well. 
-  /* play.on("click", function (i) {
+  const play = d3
+    .select("#play")
+    .on("click", function (i) {
     //This will loop through each dateIndex and update and draw, but it does it too fast.
-    for (i = state.dateIndex; i < dates.length ; state.dateIndex++) {
-    state.duration = 5000;
-    state.delay = 5000;
-    slider.property("value", state.dateIndex);
-    console.log(state.dateIndex, state.duration, state.delay);
-    draw();
-    }
-  }); */
+        for (i = state.dateIndex; i < dates.length ; state.dateIndex++) {
+        state.duration = 5000;
+        state.delay = 5000;
+        slider.property("value", state.dateIndex);
+        console.log(state.dateIndex, state.duration, state.delay);
+        draw();
+      }
+    });
   
   tooltip = d3
         .select("#d3-container")
@@ -300,7 +310,7 @@ function init () {
     };
 
   function draw() {
-
+    let clicked = false;
     //Update date for each date drawn
     dates = Array.from(new Set(state.rates.map(d => d.dateString)))  
     d3.select("#date").html(dates[state.dateIndex])
@@ -321,6 +331,33 @@ function init () {
       else return "white"
       })
       .on("mouseover", d => {
+        
+        const [mx,my] = d3.mouse(svg.node())
+        const countyFips = parseInt(d.id)
+        const countyRate = rateLookup.get(countyFips)
+        if (mx) {tooltip
+          .html(
+            
+            `
+            County: ${d.properties.name}
+            <br/>Rate: ${countyRate}
+
+            `
+        )
+          .transition()
+            .duration(50)
+            .style("left", mx + "px")
+            .style("top", my + "px")
+          }
+        else {
+          tooltip
+            .transition()
+            .duration(50)
+            .style("hide")
+        }
+      })
+      /* .on("mouseover", d => {
+        if (clicked === false) {
         const [mx,my] = d3.mouse(svg.node())
         const countyFips = parseInt(d.id)
         const countyRate = rateLookup.get(countyFips)
@@ -341,14 +378,32 @@ function init () {
             .duration(50)
             .style("left", mx + "px")
             .style("top", my + "px")
-      
-      })
+          }
+      }) *//* .on("click", d => {
+        clicked = true;
+        const [mx,my] = d3.mouse(svg.node())
+        const countyFips = parseInt(d.id)
+        const countyRate = rateLookup.get(countyFips)
+        state.geojsonHover["County"] = d.properties.name;
+        state.geojsonHover["FIPS"] = d.id;
+        state.ratesHover["Rate"] = countyRate;
+        
+        tooltip
+          .html(
+            
+            `
+            <div>County: ${state.geojsonHover.County}</div>
+            <div>Rate: ${state.ratesHover.Rate}</div>
+
+            `
+        )
+
+      }) */
       //This did not work for animation.
-      /* counties.transition()
+        /* counties.transition()
         .delay(state.delay)  
         .duration(state.duration)
-        //.ease(d3.easeLinear(1));
-          */
+        //.ease(d3.easeLinear(1));  */  
 
   svg.call(zoom);
 }
