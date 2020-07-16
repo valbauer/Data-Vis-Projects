@@ -1,6 +1,10 @@
+import { geoAlbersUsaPr } from "./geoAlbersUsaPr.js"
+
+
 const width = window.innerWidth,
 height = window.innerHeight * 0.8,
 margin = { top: 20, bottom: 50, left: 60, right: 30 }
+
 
 let svg;
 let state = {
@@ -24,7 +28,7 @@ let dates;
 let tooltip;
 let g;
 let counties;
-let states;
+let states; 
 
 Promise.all([
     d3.json("../data/counties-10m.json"),
@@ -37,10 +41,7 @@ Promise.all([
       drrall: +d.drrall,
       drrint: +d.drrint,
       stateName: d.stateName,
-      countyName: d.countyName,
-      /* firstGTChoice: +d.firstGTChoice,
-      choiceGTFirst: +d.choiceGTFirst,
-      ulAboveAvg: +d.ulAboveAvg */
+      countyName: d.countyName
     })),
   ]).then(([geojson, rates]) => {
     // + SET STATE WITH DATA
@@ -135,10 +136,32 @@ function init () {
   //Draw counties and states
   const geoData = topojson.feature(state.geojson, state.geojson.objects.counties).features
 
-  const projection = d3.geoAlbersUsa()
-        .fitSize([width, height], {type:"FeatureCollection", features: geoData})
+  //Changed the projection from geoAlbersUsa()
+  const projection = geoAlbersUsaPr()
 
-  const path = d3.geoPath().projection(projection)
+  const path = d3.geoPath()
+    .projection(projection)
+  
+  //Re-sizes the map to fit the user's window.   
+  fitSize([width, height], {type:"FeatureCollection", features: geoData})
+
+  //Function to fit the map to the size of the user's window. 
+  function fitSize(size, object){
+    var width = size[0],
+        height = size[1];
+  
+    projection
+        .scale(1)
+        .translate([0, 0]);
+  
+    var b = path.bounds(object),
+        s = 1 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+        t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+  
+    projection
+        .scale(s)
+        .translate(t);
+  }
 
   //Build slider for UI
   let mouseDown = false;
