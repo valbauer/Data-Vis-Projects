@@ -412,12 +412,14 @@ function init () {
         const [mx,my] = d3.mouse(svg.node())
         const countyFips = parseInt(d.id)
         const countyRate = rateLookup.get(countyFips)
+        const finalRate2010 = fsrr2010Lookup.get(countyFips)
         if (mx) {tooltip
           .html(
             
             `
-            County: ${d.properties.name}
-            <br/>Rate: ${countyRate}
+            <big>County: ${d.properties.name}
+            <br/>Rate: ${countyRate}</big>
+            <br/><i>2010 Rate: ${finalRate2010}</i>
 
             `
         )
