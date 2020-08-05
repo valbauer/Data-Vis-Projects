@@ -14,6 +14,29 @@
     <input id="slider" type="range"></input>
     <div id="interactiveLegend"></div>
     <div id="d3-container">
+      <svg height="8" width="8" xmlns="http://www.w3.org/2000/svg" version="1.1"> 
+        <defs> 
+          <pattern id="crosshatch" patternUnits="userSpaceOnUse" width="8" height="8"> 
+            <image xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4JyBoZWlnaHQ9JzgnPgogIDxyZWN0IHdpZHRoPSc4JyBoZWlnaHQ9JzgnIGZpbGw9JyNmZmYnLz4KICA8cGF0aCBkPSdNMCAwTDggOFpNOCAwTDAgOFonIHN0cm9rZS13aWR0aD0nMC41JyBzdHJva2U9JyNhYWEnLz4KPC9zdmc+Cg==" x="0" y="0" width="8" height="8"> 
+            </image> 
+          </pattern> 
+        </defs> 
+      </svg>
+      <!-- <svg width="120" height="120" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <pattern id="pattern-stripe" 
+            width="4" height="4" 
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(45)">
+            <rect width="2" height="4" transform="translate(0,0)" fill="white"></rect>
+          </pattern>
+          <mask id="mask-stripe">
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-stripe)" />
+          </mask>      
+        </defs>
+  
+    </svg> -->
+
     </div>
     <script src="../../lib/d3.js"></script>
     <script src="https://d3js.org/d3-array.v2.min.js"></script>

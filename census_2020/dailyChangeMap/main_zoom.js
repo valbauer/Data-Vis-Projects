@@ -23,11 +23,13 @@ let state = {
     }
 };
 let rateLookup;
+let fsrr2010Lookup;
 let groupedCounties;
 let dates;
 let tooltip;
 let g;
 let counties;
+let countyOverlay;
 let states; 
 
 Promise.all([
@@ -36,6 +38,7 @@ Promise.all([
       fips: +d.fips,
       date: new Date(d.date),
       dateString: d.date,
+      fsrr2010: +d.fsrr2010,
       crrall: +d.crrall,
       crrint: +d.crrint,
       drrall: +d.drrall,
@@ -89,10 +92,13 @@ const zoom = d3.zoom()
   .scaleExtent([1, 12])
   .on("zoom", zoomed);
 
+//ADDED LAST TWO LINES TO SCALE STATE LABELS BASED ON SCALE
 function zoomed() {
     const {transform} = d3.event;
     g.attr("transform", transform);
-    g.attr("stroke-width", 1 / transform.k);
+    g.attr("stroke-width", 2 / transform.k);
+    g.selectAll("text")
+      .attr("font-size", 15 / transform.k);
   }
 
 /* //This function will zoom into the county on click. Tried to use it to zoom to state bbox on click.
@@ -138,6 +144,7 @@ function init () {
 
   //Changed the projection from geoAlbersUsa()
   const projection = geoAlbersUsaPr()
+  //const projection = d3.geoAlbersUsa()
 
   const path = d3.geoPath()
     .projection(projection)
@@ -305,6 +312,7 @@ function init () {
     slider.property("value", 0);
 
     rateLookup = new Map(groupedCounties.get(dates[state.dateIndex]).map(d => [d.fips, d.crrall]))
+    fsrr2010Lookup = new Map(groupedCounties.get(dates[0]).map(d => [d.fips, d.fsrr2010]))
 
     counties = g.selectAll(".county")
         .data(topojson.feature(state.geojson, state.geojson.objects.counties).features)
@@ -316,19 +324,54 @@ function init () {
             const countyFips = parseInt(d.id)
             const countyRate = rateLookup.get(countyFips)
 
-            if (countyRate) {
-            return colorScale(countyRate) 
+            if (countyRate !== null) {
+              return colorScale(countyRate) 
             }
-            else return "white"
+            else {return "white";}
             })
+            .attr("stroke", d => {
+              const countyFips = parseInt(d.id)
+              const countyRate = rateLookup.get(countyFips)
+              const finalRate2010 = fsrr2010Lookup.get(countyFips)
+                if (countyRate >= finalRate2010) {
+                  return "lime";
+                }
+              })
+
+    /* countyOverlay = g.selectAll(".countyOverlay")
+        .data(topojson.feature(state.geojson, state.geojson.objects.counties).features)
+        .join("path")
+          .attr("d", path)
+          .attr("class", "countyOverlay")
+          .attr("stroke", d => {
+            const countyFips = parseInt(d.id)
+            const countyRate = rateLookup.get(countyFips)
+            const finalRate2010 = fsrr2010Lookup.get(countyFips)
+              if (countyRate >= finalRate2010) {
+                return "white";
+              }
+            }) */
 
     //Draw states on top of counties for outline.
     states = g.selectAll(".state")
       .data(topojson.feature(state.geojson, state.geojson.objects.states).features)
       .join("path")
-      .attr("class", "state")
-      .attr("d", path)
+        .attr("class", "state")
+        .attr("d", path)
     
+    //ADD LABLES FOR STATES  
+    g.selectAll(".stateLabel")
+      .data(topojson.feature(state.geojson, state.geojson.objects.states).features)
+      .join("text") 
+      .attr("class", "stateLabel")
+      .attr("transform", function(d) {
+        const coords = path.centroid(d)
+        if (d.properties.usps)
+        {return `translate(${coords})`;}
+        } 
+      )
+      .text(d => d.properties.usps)
+      
     draw();
     };
 
@@ -340,19 +383,30 @@ function init () {
     console.log("Drawing date: ", dates[state.dateIndex])
     
     rateLookup = new Map(groupedCounties.get(dates[state.dateIndex]).map(d => [d.fips, d.crrall]))
+    fsrr2010Lookup = new Map(groupedCounties.get(dates[0]).map(d => [d.fips, d.fsrr2010]))
     
     counties
       .attr("fill", d => {
         const countyFips = parseInt(d.id)
         const countyRate = rateLookup.get(countyFips)
-      if (countyRate && state.selectedClass === null) {
-        return colorScale(countyRate) 
+        const finalRate2010 = fsrr2010Lookup.get(countyFips)
+        
+        if (countyRate && state.selectedClass === null /* && countyRate < finalRate2010 */) {
+          return colorScale(countyRate); 
+          }
+        else if (countyRate && state.selectedClass !== null /* && countyRate < finalRate2010 */) {
+          return(colorScale(countyRate) === state.selectedClass[0] ? colorScale(countyRate) : "white");
         }
-      else if (countyRate && state.selectedClass !== null) {
-        return(colorScale(countyRate) === state.selectedClass[0] ? colorScale(countyRate) : "white")
-      }
-      else return "white"
-      })
+        else {return "white";}
+        })
+        .attr("stroke", d => {
+          const countyFips = parseInt(d.id)
+          const countyRate = rateLookup.get(countyFips)
+          const finalRate2010 = fsrr2010Lookup.get(countyFips)
+          if (countyRate >= finalRate2010) {
+            return "lime";
+          }
+        })
       .on("mouseover", d => {
         
         const [mx,my] = d3.mouse(svg.node())
@@ -378,55 +432,16 @@ function init () {
             .duration(50)
             .style("hide")
         }
-      })
-      /* .on("mouseover", d => {
-        if (clicked === false) {
-        const [mx,my] = d3.mouse(svg.node())
+      }) 
+
+   /*  countyOverlay = g.selectAll(".countyOverlay")
+      .attr("stroke", d => {
         const countyFips = parseInt(d.id)
         const countyRate = rateLookup.get(countyFips)
-        state.geojsonHover["County"] = d.properties.name;
-        state.geojsonHover["FIPS"] = d.id;
-        state.ratesHover["Rate"] = countyRate;
-        
-        tooltip
-          .html(
-            
-            `
-            <div>County: ${state.geojsonHover.County}</div>
-            <div>Rate: ${state.ratesHover.Rate}</div>
-
-            `
-        )
-          .transition()
-            .duration(50)
-            .style("left", mx + "px")
-            .style("top", my + "px")
-          }
-      }) *//* .on("click", d => {
-        clicked = true;
-        const [mx,my] = d3.mouse(svg.node())
-        const countyFips = parseInt(d.id)
-        const countyRate = rateLookup.get(countyFips)
-        state.geojsonHover["County"] = d.properties.name;
-        state.geojsonHover["FIPS"] = d.id;
-        state.ratesHover["Rate"] = countyRate;
-        
-        tooltip
-          .html(
-            
-            `
-            <div>County: ${state.geojsonHover.County}</div>
-            <div>Rate: ${state.ratesHover.Rate}</div>
-
-            `
-        )
-
+        const finalRate2010 = fsrr2010Lookup.get(countyFips)
+        if (countyRate >= finalRate2010) {
+          return "white";
+        }
       }) */
-      //This did not work for animation.
-        /* counties.transition()
-        .delay(state.delay)  
-        .duration(state.duration)
-        //.ease(d3.easeLinear(1));  */  
-
   svg.call(zoom);
 }

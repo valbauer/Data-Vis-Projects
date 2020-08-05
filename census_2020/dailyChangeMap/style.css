@@ -45,9 +45,24 @@ body {
 }
 path.state {
     fill: none;
-    /* fill-opacity: 0; */
     stroke: gray;
     stroke-width: 1px;
+}
+
+.viewBox {
+    font-size: 15px;
+}
+
+.stateLabel {
+    fill: black;
+    font-weight: bolder;
+    fill-opacity: .8;
+    stroke: white;
+    stroke-width: .085em;
+    stroke-opacity: .95;
+    paint-order: stroke fill;
+    text-anchor: middle;
+    pointer-events: none;
 }
 
 path.county:hover {
@@ -58,5 +73,10 @@ path.county:hover {
 path.county:clicked {
     stroke: black;
     stroke-width: 1.5px;
+}
+
+.countyOverlay {
+    pointer-events: none;
+    fill: none;
 }
 
