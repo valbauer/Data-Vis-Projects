@@ -1,0 +1,32 @@
+body {
+    /* ref: https://fonts.google.com/specimen/Source+Sans+Pro?selection.family=Source+Sans+Pro */
+    font-family: "Roboto", sans-serif;
+    padding: 1em 3em;
+  }
+
+h3 {
+    font-family: "Roboto light";
+}
+
+h5 {
+    font-family: "Roboto light"
+}
+
+.dists {
+    stroke: black;
+    stroke-width: .25;
+}
+
+path.dists:hover {
+    stroke: black;
+    stroke-width: 1.5;
+}
+
+.tooltip {
+    display: block;
+    height: fit-content;
+    background-color: white;
+    opacity: 0.8;
+    pointer-events: none;
+    padding: 5px;
+}
