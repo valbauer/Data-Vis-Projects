@@ -5,11 +5,11 @@ body {
   }
 
 h3 {
-    font-family: "Roboto light";
+    font-weight: lighter;
 }
 
 h5 {
-    font-family: "Roboto light"
+    font-weight: lighter;
 }
 
 .dists {
