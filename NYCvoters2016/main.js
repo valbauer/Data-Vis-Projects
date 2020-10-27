@@ -12,7 +12,7 @@ let tooltip;
 let dists;
 
 Promise.all([
-    d3.json("data/NYC_elec_dists_2016data_simplified.json"), 
+    d3.json("data/NYC_elec_dists_2016data_all.json"), 
     d3.csv("data/NYC_2016_results_aded.csv", d => ({
         aded: +d.aded,
         trump: +d.Trump,
@@ -29,7 +29,7 @@ Promise.all([
     init();
   });
 
-const zoom = d3.zoom()
+/* const zoom = d3.zoom()
   .scaleExtent([1, 12])
   .on("zoom", zoomed);
 
@@ -37,7 +37,7 @@ function zoomed() {
     const {transform} = d3.event;
     g.attr("transform", transform);
     g.attr("stroke-width", 2 / transform.k);
-  }
+  } */
 
   function init() {
     // create an svg element in our main `d3-container` element
@@ -97,7 +97,7 @@ function zoomed() {
       //.data(topojson.feature(state.geojson, state.geojson.objects.NYC_elec_dists_2016data.geometries))//.features)
       .join("path")
       .attr("d", path)
-      .attr("class", "dists")
+      .attr("class", d => d.properties.winner)
       .attr("fill", function (d) {
           if (d.properties.total_first2016 > 10) {
           return colorScale(d.properties.pct_total_first2016_total_voted2016)
@@ -131,41 +131,45 @@ function zoomed() {
       .style("position", "absolute")
 
     dists
-        .on("mouseover", (d) => {
+        .on("mouseover", function (d) {
+            //console.log(this)
             const [mx,my] = d3.mouse(svg.node())
             const aded = d.properties.elect_dist
             const results_aded = state.results.find(result => result.aded === aded)
             if (results_aded) {
-            if (d.properties.total_first2016 > 10 && results_aded.trump > results_aded.clinton) {
-                tooltip
-                    .html(
-                `
-                <big>${(d.properties.pct_total_first2016_total_voted2016) ? d.properties.pct_total_first2016_total_voted2016 : 0}% new voters
-                <br/></big>
-                (${(d.properties.total_first2016) ? d.properties.total_first2016 : 0} new voters of ${d.properties.total_voted2016}) 
-                <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats
-                <br/>${(d.properties.REP) ? d.properties.REP : 0} Republicans
-                <br/>${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
-                <br/>Trump won this district by ${results_aded.trump - results_aded.clinton} votes.`
-                )} 
-            else if (d.properties.total_first2016 > 10 && results_aded.trump < results_aded.clinton) 
-            {
-                tooltip
-                    .html(
-                `
-                <big>${(d.properties.pct_total_first2016_total_voted2016) ? d.properties.pct_total_first2016_total_voted2016 : 0}% new voters
-                <br/></big>
-                (${(d.properties.total_first2016) ? d.properties.total_first2016 : 0} new voters of ${d.properties.total_voted2016}) 
-                <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats
-                <br/>${(d.properties.REP) ? d.properties.REP : 0} Republicans
-                <br/>${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
-                <br/>Clinton won this district by ${results_aded.clinton - results_aded.trump} votes.`
-                )}
-            
-            else { 
-                tooltip.html(
-                `This district had fewer than 10 new voters.`
-                )}
+                if (d.properties.total_first2016 > 10 && results_aded.trump > results_aded.clinton) {
+                    tooltip
+                        .html(
+                    `
+                    <big>${(d.properties.pct_total_first2016_total_voted2016) ? d.properties.pct_total_first2016_total_voted2016 : 0}% new voters
+                    <br/></big>
+                    ${(d.properties.total_first2016) ? d.properties.total_first2016 : 0} new voters of ${d.properties.total_voted2016}
+                    <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats
+                    <br/>${(d.properties.REP) ? d.properties.REP : 0} Republicans
+                    <br/>${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
+                    <br/><b>Trump won this district in ${d.properties.nta_name} by ${results_aded.trump - results_aded.clinton} votes.</b>`
+                    )
+
+                //d3.select(this).classed("trump", true)
+                } 
+                else if (d.properties.total_first2016 > 10 && results_aded.trump < results_aded.clinton) 
+                {
+                    tooltip
+                        .html(
+                    `
+                    <big>${(d.properties.pct_total_first2016_total_voted2016) ? d.properties.pct_total_first2016_total_voted2016 : 0}% new voters
+                    <br/></big>
+                    ${(d.properties.total_first2016) ? d.properties.total_first2016 : 0} new voters of ${d.properties.total_voted2016}
+                    <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats
+                    <br/>${(d.properties.REP) ? d.properties.REP : 0} Republicans
+                    <br/>${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
+                    <br/><b>Clinton won this district in ${d.properties.nta_name} by ${results_aded.clinton - results_aded.trump} votes.</b>`
+                    )
+                }           
+                else { 
+                    tooltip.html(
+                    `This district had fewer than 10 new voters.`
+                    )}
             } 
             else {
                 if (d.properties.total_first2016 > 10) {
@@ -178,19 +182,19 @@ function zoomed() {
                     <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats
                     <br/>${(d.properties.REP) ? d.properties.REP : 0} Republicans
                     <br/>${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
-                    <br/>Election results not available for this district.`
+                    <br/>Election results not available for this district in ${d.properties.nta_name}.`
                     )} 
-                    else { 
+                else { 
                     tooltip.html(
                     `This district had fewer than 10 new voters.`
                     )}
             }
+
             tooltip.transition()
                 .duration(50)
                 .style("left", mx + "px")
                 .style("top", my + "px")
                 .style("visibility", "visible")
-            
             })
         
     dists.on("mouseout", () => {
