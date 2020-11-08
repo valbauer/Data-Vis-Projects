@@ -1,7 +1,7 @@
 body {
     /* ref: https://fonts.google.com/specimen/Source+Sans+Pro?selection.family=Source+Sans+Pro */
     font-family: "Roboto", sans-serif;
-    padding: 1em 3em;
+    padding: 0;
   }
 
 h3 {
@@ -41,11 +41,29 @@ path.clinton:hover {
     stroke-width: 3;
 }
 
+path.clinton:hover {
+    fill: darkblue;
+    stroke: white;
+    stroke-width: 3;
+}
+
 .tooltip {
     display: block;
     height: fit-content;
-    background-color: white;
+    background-color: white; 
     opacity: 0.8;
     pointer-events: none;
     padding: 5px;
+    border: .5px solid black;
 }
+.legend {
+    position: relative;
+    padding-bottom: 0;
+}
+
+.legendText {
+    text-anchor: middle;
+    font-weight: bold;
+    font-size: 1rem;
+}
+

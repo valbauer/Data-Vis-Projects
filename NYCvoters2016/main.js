@@ -1,13 +1,13 @@
 const width = window.innerWidth,
 height = window.innerHeight * 0.8,
-margin = { top: 20, bottom: 50, left: 60, right: 30 }
+margin = { top: 20, bottom: 50, left: 5, right: 5 }
 
 
 let state = {
     geojson: null,
     results: null
 }
-let svg;
+let map;
 let tooltip;
 let dists;
 
@@ -29,22 +29,10 @@ Promise.all([
     init();
   });
 
-/* const zoom = d3.zoom()
-  .scaleExtent([1, 12])
-  .on("zoom", zoomed);
-
-function zoomed() {
-    const {transform} = d3.event;
-    g.attr("transform", transform);
-    g.attr("stroke-width", 2 / transform.k);
-  } */
-
   function init() {
     // create an svg element in our main `d3-container` element
     
     mapboxgl.accessToken = "pk.eyJ1IjoidmFsYmF1ZXIiLCJhIjoiY2tnaWhndHVlMWZneDJzcnJkemRqeGZzeiJ9.01wZ91f4C1ngeht7WUAdKQ"
-
-    //d3.select("#d3-container").attr("height", height).attr("width",width)
 
     const basemap = new mapboxgl.Map({
         container: "d3-container",
@@ -58,13 +46,12 @@ function zoomed() {
 
     const mapboxContainer = basemap.getCanvasContainer()
     
-    //svg = d3.select("#d3-container")  
-    svg = d3.select(mapboxContainer)  
+    map = d3.select(mapboxContainer)  
         .append("svg")
         .style("position", "absolute")
         .attr("width", "100%")
         .attr("height", "100%")
-      //.style("pointer-event", "none");
+
 
     //FROM http://bl.ocks.org/enjalot/0d87f32a1ccb9a720d29ba74142ba365
     function getD3() {
@@ -83,15 +70,13 @@ function zoomed() {
       }
       // calculate the original d3 projection
     let projection = getD3();
-    //let projection = null;
-    //let projection = d3.geoMercator()
     let path = d3.geoPath().projection(projection);
     
     const colorScale = d3.scaleThreshold()
         .domain([3, 5, 7, 10])
         .range(d3.schemeBuPu[5]);
 
-    dists = svg
+    dists = map
       .selectAll(".dists")
       .data(state.geojson.features)
       //.data(topojson.feature(state.geojson, state.geojson.objects.NYC_elec_dists_2016data.geometries))//.features)
@@ -122,7 +107,7 @@ function zoomed() {
         render()
       })
       // render our initial visualization
-      render();
+    render();
     
     tooltip = d3
       .select("#d3-container")
@@ -132,8 +117,7 @@ function zoomed() {
 
     dists
         .on("mouseover", function (d) {
-            //console.log(this)
-            const [mx,my] = d3.mouse(svg.node())
+            const [mx,my] = d3.mouse(map.node())
             const aded = d.properties.elect_dist
             const results_aded = state.results.find(result => result.aded === aded)
             if (results_aded) {
@@ -144,13 +128,13 @@ function zoomed() {
                     <big>${(d.properties.pct_total_first2016_total_voted2016) ? d.properties.pct_total_first2016_total_voted2016 : 0}% new voters
                     <br/></big>
                     ${(d.properties.total_first2016) ? d.properties.total_first2016 : 0} new voters of ${d.properties.total_voted2016}
-                    <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats
-                    <br/>${(d.properties.REP) ? d.properties.REP : 0} Republicans
-                    <br/>${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
-                    <br/><b>Trump won this district in ${d.properties.nta_name} by ${results_aded.trump - results_aded.clinton} votes.</b>`
+                    <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats,
+                    ${(d.properties.REP) ? d.properties.REP : 0} Republicans, 
+                    and ${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                    <b><span style="color:rgb(189, 9, 9)">Trump won this district in ${d.properties.nta_name} by ${results_aded.trump - results_aded.clinton} votes.</span></b>`
                     )
-
-                //d3.select(this).classed("trump", true)
+                        //.style("background-color", "rgb(189, 9, 9)")
                 } 
                 else if (d.properties.total_first2016 > 10 && results_aded.trump < results_aded.clinton) 
                 {
@@ -160,11 +144,13 @@ function zoomed() {
                     <big>${(d.properties.pct_total_first2016_total_voted2016) ? d.properties.pct_total_first2016_total_voted2016 : 0}% new voters
                     <br/></big>
                     ${(d.properties.total_first2016) ? d.properties.total_first2016 : 0} new voters of ${d.properties.total_voted2016}
-                    <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats
-                    <br/>${(d.properties.REP) ? d.properties.REP : 0} Republicans
-                    <br/>${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
-                    <br/><b>Clinton won this district in ${d.properties.nta_name} by ${results_aded.clinton - results_aded.trump} votes.</b>`
+                    <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats,
+                    ${(d.properties.REP) ? d.properties.REP : 0} Republicans,
+                    and ${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                    <b><span style="color:darkblue">Clinton won this district in ${d.properties.nta_name} by ${results_aded.clinton - results_aded.trump} votes.</span></b>`
                     )
+                        //.style("background-color", "darkblue")
                 }           
                 else { 
                     tooltip.html(
@@ -182,7 +168,8 @@ function zoomed() {
                     <br/>(${(d.properties.DEM) ? d.properties.DEM : 0} Democrats
                     <br/>${(d.properties.REP) ? d.properties.REP : 0} Republicans
                     <br/>${((d.properties.total_first2016 - d.properties.DEM - d.properties.REP) > 0) ? d.properties.total_first2016 - d.properties.DEM - d.properties.REP : 0} Other)
-                    <br/>Election results not available for this district in ${d.properties.nta_name}.`
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                    Election results not available for this district in ${d.properties.nta_name}.`
                     )} 
                 else { 
                     tooltip.html(
@@ -203,7 +190,48 @@ function zoomed() {
             .duration(50)
             .style("visibility", "hidden")
     }) 
-       
-    };
+
+    const legendColors = Array.from([...colorScale.range()])
+    const legendText = ["Less than 3%", "3-5%", "5-7%", "7-10%", "Over 10%"]
+    const legendArray = [];
+
+    legendColors.forEach(function(color, i){
+      let obj = {};
+      obj.color = color;
+      obj.value = legendText[i];
+      legendArray.push(obj) 
+    })
+
+    const legend = d3.select("#legend")
+      .append("svg")
+      .attr("class", "legend")
+      .attr("width", "100%")
+      .attr("height", "20")
+    
+    legendArray.forEach(function (d,i) {
+      const g = legend.append("g")
+  
+        g.append("rect")
+          .attr("class", "legendRects")
+          .attr("width", (width - margin.right - margin.left)/5)
+          .attr("height", "100%")
+          .attr("x", i * width/5)
+          .style("fill", function() {
+            return d.color;
+          })
+
+        g.append("text")
+          .attr("class", "legendText")
+          .attr("x", i * width/5 + (width/10))
+          .attr("y", "75%")
+          .text(function () {
+            return d.value})
+          .style("fill", function() {
+              if (d.value !== "Less than 3%" && d.value !== "3-5%") {
+                return  "whitesmoke"}
+            else return "dimgray";
+          })
+    })     
+  };
 
     
