@@ -56,14 +56,17 @@ path.clinton:hover {
     padding: 5px;
     border: .5px solid black;
 }
+
 .legend {
-    position: relative;
-    padding-bottom: 0;
+    position: absolute;
+    padding: 5px;
+    z-index: 1;
 }
 
 .legendText {
     text-anchor: middle;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.25em;
+    padding: 2px;
 }
 

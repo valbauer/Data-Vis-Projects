@@ -114,6 +114,7 @@ Promise.all([
       .append("div")
       .attr("class", "tooltip")
       .style("position", "absolute")
+      .style("visibility", "hidden")
 
     dists
         .on("mouseover", function (d) {
@@ -192,7 +193,7 @@ Promise.all([
     }) 
 
     const legendColors = Array.from([...colorScale.range()])
-    const legendText = ["Less than 3%", "3-5%", "5-7%", "7-10%", "Over 10%"]
+    const legendText = ["Below 3%", "3-5%", "5-7%", "7-10%", "Over 10%"]
     const legendArray = [];
 
     legendColors.forEach(function(color, i){
@@ -202,20 +203,59 @@ Promise.all([
       legendArray.push(obj) 
     })
 
+    //For vertical legend
+    const legend = d3.select("#legend")
+      .append("svg")
+      .attr("class", "legend")
+      .attr("width", width/10)
+      .attr("height", "100%")
+    
+   /* //For horizontal legend
     const legend = d3.select("#legend")
       .append("svg")
       .attr("class", "legend")
       .attr("width", "100%")
       .attr("height", "20")
-    
+       */
+
+
     legendArray.forEach(function (d,i) {
       const g = legend.append("g")
-  
+
+        //For vertical legend - change css text-align and padding
+        g.append("rect")
+          .attr("class", "legendRects")
+          //.attr("width", (width - margin.right - margin.left)/5)
+          .attr("width", width/10)
+          //.attr("height", "100%")
+          .attr("height", height/20)
+          //.attr("x", i * width/5)
+          .attr("y", i * height/20)
+          .style("fill", function() {
+            return d.color;
+          })
+
+        g.append("text")
+          .attr("class", "legendText")
+          //.attr("x", i * width/5 + (width/10))
+          .attr("x", "50%")
+          //.attr("y", "75%")
+          .attr("y", i * height/20 + (height/40) + 5)
+          .text(function () {
+            return d.value})
+          .style("fill", function() {
+              if (d.value !== "Below 3%" && d.value !== "3-5%") {
+                return  "whitesmoke"}
+            else return "dimgray";
+          })
+        
+       /*  // For horizontal legend
         g.append("rect")
           .attr("class", "legendRects")
           .attr("width", (width - margin.right - margin.left)/5)
           .attr("height", "100%")
           .attr("x", i * width/5)
+          //.attr("y", i * height/20)
           .style("fill", function() {
             return d.color;
           })
@@ -227,10 +267,10 @@ Promise.all([
           .text(function () {
             return d.value})
           .style("fill", function() {
-              if (d.value !== "Less than 3%" && d.value !== "3-5%") {
+              if (d.value !== "Below 3%" && d.value !== "3-5%") {
                 return  "whitesmoke"}
             else return "dimgray";
-          })
+          }) */
     })     
   };
 
