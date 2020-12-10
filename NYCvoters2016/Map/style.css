@@ -1,0 +1,129 @@
+body {
+    /* ref: https://fonts.google.com/specimen/Source+Sans+Pro?selection.family=Source+Sans+Pro */
+    font-family: "Montserrat", sans-serif;
+    background-color: whitesmoke;
+  }
+/* .wrapper {
+    display: flex;
+    justify-content: center;
+} */
+
+/* .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 3fr;  
+} */
+
+#d3-container {
+    font-family: "Montserrat", sans-serif;
+    grid-column: 1;
+    grid-row: 2 / 3;
+}
+h1 {
+    font-family: 'Lora', serif;
+    font-size: 2em;
+    /* font-family: "Merriweather", serif; */
+    margin: 0;
+    grid-column: 1 / 2;
+    grid-row: 1;
+    padding-bottom: 5px;
+    text-align: center;
+}
+h2 {
+    text-align: center;
+}
+h3 {
+    font-weight: lighter;
+    grid-column: 1 / 2;
+    grid-row: 1;
+    margin-top: 50px;
+    padding: 0 10 10 0;
+}
+
+/* .footnote {
+    font-weight: lighter;
+    margin: 0; 
+    grid-column: 2 / 3;
+    grid-row: 2;   
+} */
+
+/* path.trump {
+    stroke: black;
+    stroke-width: .25;
+    cursor: default;
+} */
+.map {
+    position: absolute;
+    z-index: 1;
+    
+}
+
+path {
+    stroke-width: .25;
+    cursor: default;
+}
+
+path:hover {
+    stroke: black;
+    stroke-width: 2;
+}
+
+path.trump:hover {
+    fill: rgb(189, 9, 9);
+    stroke: white;
+    stroke-width: 3;
+}
+
+path.clinton:hover {
+    fill: darkblue;
+    stroke: white;
+    stroke-width: 3;
+}
+
+path.clinton:hover {
+    fill: darkblue;
+    stroke: white;
+    stroke-width: 3;
+}
+
+.tooltip {
+    font-family: "Montserrat", sans-serif;
+    display: block;
+    height: fit-content;
+    background-color: white; 
+    opacity: 0.8;
+    pointer-events: none;
+    padding: 5px;
+    border: .5px solid black;
+    z-index: 1;
+}
+
+/* #infoPage {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background-color: white;
+} */
+
+.legend {
+    position: absolute;
+    /* padding: 5px; */
+    z-index: 2;
+    border-style: solid;
+    border-width: 3px;
+    border-color: white;
+    background-color: white;
+}
+
+.legendText {
+    text-anchor: middle;
+    font-weight: bold;
+    font-size: 1.15em;
+    padding: 2px;
+}
+
+.legendRects {
+    stroke-width: 5px;
+}
+

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>NYC 2016</title>
+    <link rel="stylesheet" href="style.css">
+   <!--  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<!--     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Merriweather:wght@400;700&family=Montserrat:ital,wght@0,100;0,400;1,100&display=swap" rel="stylesheet">
+ -->    
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Montserrat&family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />  
+  </head>
+  <body>  
+    <!-- <div class="wrapper">
+      <div class="grid"> -->
+    <h1>Newly energized voters in 2016 NYC</h1>
+        <h2>Did the 2016 Presidential election inspire long-time residents of New York City to vote?</h2>
+      <h3>  
+        Each dot below represents one voter in New York City that was registered to vote prior to the 2008 
+        Presidential election. However, these voters did not participate in a Presidential election until 2016. 
+        The median age of voters within selected groups is indicated by the green line.
+      </h3>
+      <div class="selections">  
+        <g>
+          <label for="dropdownDecade">Registered before or after 2000:</label>
+          <select id="dropdownDecade" name="dropdownDecade"></select>
+          </g>
+
+        <g>
+        <label for="dropdownParty">Party</label>
+        <select id="dropdownParty" name="dropdownParty"></select>
+        </g>
+
+        <g>
+        <label for="dropdownGender">Gender</label>
+        <select id="dropdownGender" name="dropdownGender"></select>
+        </g>
+
+        <g>
+        <label for="dropdownWinner">District Winner</label>
+        <select id="dropdownWinner" name="dropdownWinner"></select>
+        </g>
+      </div>
+    <div id="scatterplot" style="position: abolute;">
+    </div>
+    <script src="../../../lib/d3.js"></script>
+    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="https://d3js.org/d3-random.v2.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    <script src="scatterplot.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>NYC 2016</title>
+    <link rel="stylesheet" href="style.css">
+   <!--  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Merriweather:wght@400;700&family=Montserrat:ital,wght@0,100;0,400;1,100&display=swap" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />  
+  </head>
+  <body>  
+    <!-- <div class="wrapper">
+      <div class="grid"> -->
+    <h1>FIRST-TIME VOTERS IN 2016 NYC</h1>
+      <h2>Where do they live?</h2>
+      <!-- <h3>  
+        First-time voters are defined in this map as voters who were registered prior to the 2008 presidential election 
+        but did not vote until the 2016 presidential election. These voter records are geocoded to current election districts, 
+        not 2016 vintage districts. Some of the election districts have been redrawn since 2016 
+        and the election results for the new districts are not available. 
+      </br>Source: NYC Board of Elections via CUNY Center for Urban Research.
+      </h3> -->
+        
+       <!--  <label for="dropdownParty">Party</label>
+        <select id="dropdownParty" name="dropdownParty"></select>
+
+        <label for="dropdownGender">Gender</label>
+        <select id="dropdownGender" name="dropdownGender"></select>
+
+        <label for="dropdownWinner">District Winner</label>
+        <select id="dropdownWinner" name="dropdownWinner"></select>
+ -->
+    <div id="map" style="height: 600px;" style="position: abolute;">
+      <!-- <div id="infoPage"></div> -->
+      <div id="legend"></div> 
+      </div>
+    <div class="footnote"><i>Disclaimer: These voter records are geocoded to current election districts, not 2016 vintage districts. 
+      The only voters that are shown in the numerator are those that were matched between 2013 and 2018 
+      voter history files from the NYC Board of Elections. Some of the election districts have been redrawn since 2016 
+      and the election results for those districts are not available. 
+     </br>Source: NYC Board of Elections via CUNY Center for Urban Research.</i></h2>
+    </div> 
+  </div>
+  </div>
+    <script src="../../../lib/d3.js"></script>
+    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="https://d3js.org/d3-random.v2.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    <script src="map.js"></script>
+    <!-- <script src="scatterplot.js"></script> -->
+
+  </body>
+</html>
