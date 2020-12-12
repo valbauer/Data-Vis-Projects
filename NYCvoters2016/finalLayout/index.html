@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>NYC 2016</title>
+    <link rel="stylesheet" href="style.css">
+   <!--  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<!--     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Merriweather:wght@400;700&family=Montserrat:ital,wght@0,100;0,400;1,100&display=swap" rel="stylesheet">
+ --> 
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Montserrat&family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />  
+  </head>
+  <body>  
+    <!-- <div class="wrapper"> -->
+    <div class="grid">
+      <h1>Newly energized voters in 2016 New York City</h1>
+        <h2>Did the 2016 Presidential election inspire long-time residents of New York City to vote?</h2>
+      <h3 class="distributionDesc">   
+        Each dot in this chart represents one voter in New York City that was registered to vote prior to the 2008 
+        presidential election. However, these voters did not participate in a presidential election until 2016. They
+        make up about 4% of the voting population in this dataset.
+      </br>  
+    </br>Blue dots are voters registered as Democrat (63% of the new voters).
+  </br>
+    </br>
+      Red dots are voters registered as Republican (15% of the new voters).
+    </br>
+   
+  </br>Purple dots are voters registered as any other party (22% of the new voters).
+</br>
+      </br>The median age of voters within the selected groups is indicated by the dark line. 
+
+      </h3>
+      </h3>
+      <h3 class="mapDesc">  
+        The voters depicted in this map are those who were registered prior to the 2008 presidential election 
+        but did not vote until the 2016 presidential election. Their location has been geocoded to current election districts, 
+        not 2016 vintage districts. Some of the election districts have been redrawn since 2016 
+        and the election results for the new districts are not available. 
+      </br>
+      </br>Toggle between the two different map views to see where higher percentages of newly energized 
+      voters are located and the percentage of votes the district winner received. 
+      </h3>
+      <div class="nav">
+    
+          <text class="distroIcon">Distribution</text> 
+          <img class="distroIcon" src="../data/distro.png" height= "30px" alt="Distribution"/>  
+        
+          <span class="mapIcon">Map</span>
+          <img class="mapIcon" src="../data/map.png" height= "40px" alt="Map"/>
+      
+          <span class="aboutIcon">About</span>
+          <img  class="aboutIcon" src="../data/about.png" height= "20px" alt="About"/>
+      
+      </div>
+      <div class="selections">  
+        <g>
+          <label for="dropdownDecade">Registered before or after 2000:</label>
+          <select id="dropdownDecade" name="dropdownDecade"></select>
+          </g>
+
+        <g>
+        <label for="dropdownParty">Party</label>
+        <select id="dropdownParty" name="dropdownParty"></select>
+        </g>
+
+        <g>
+        <label for="dropdownGender">Gender</label>
+        <select id="dropdownGender" name="dropdownGender"></select>
+        </g>
+
+        <g>
+        <label for="dropdownWinner">District Winner</label>
+        <select id="dropdownWinner" name="dropdownWinner"></select>
+        </g>
+      </div>
+      <div id="toggleMap">
+        <form>
+          <input type="radio" id="pctFirst" value="pct_total_first2016_total_voted2016">
+          <label for="pctFirst">Percentage of new voters</label>
+       
+          <input type="radio" id="winner" value="winner"> 
+          <label for="winner">District winner</label>
+        </form>
+      </div>
+      <div id="scatterplot"></div>
+      <div id="map">
+        
+        <div id="legend"></div> 
+
+      </div>
+      <div class="about">
+        <p>The voter records in this visualization come from two citywide voter history files, one from 2013 and one from 2018.
+          New York voters are assigned a unique identifier at the time of registration called an EMSID. The two voter history files
+          were joined on voter EMSID. Therefore, the only voters included in this project are those that were in both voter history files.
+          The 2018 file has 4,604,801 records and 3,667,662 (79.6%) matched with the 2013 file. According to the 2018 file, 2,706,535 
+          people voted in the 2016 election. 106,085 (3.9%) of these voters were registered to vote prior to the 2008 
+          presidential election, but did not vote until the 2016 presidential election.
+          The records are geocoded to current election districts, not 2016 vintage districts. 
+          Some of the election districts have been redrawn since 2016 
+          and the election results for those districts are not available. 
+        </br>
+        </br>Source: NYC Board of Elections via CUNY Center for Urban Research.</p>
+      </div>
+    </div>
+    <script src="../../lib/d3.js"></script>
+    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="https://d3js.org/d3-random.v2.min.js"></script>
+    <script type="module" src="main.js"></script>
+
+  </body>
+</html>

@@ -33,37 +33,13 @@ Promise.all([
     // create an svg element in our main `d3-container` element
 
    const infoPage = d3.select("#infoPage")
-   /* const infoButton = infoPage.append("rect")
-   
-   infoButton
-    .attr("height", "15px")
-    .attr("width", "15px")
-    .text("i")
-    .style("visibility", "hidden")
- */
-   
+  
    infoPage.on("click", function () {
       infoPage
         .transition()
         .duration(5000)
         .style("visibility", "hidden")
-
-      //infoButton.style("visibility", "visible")
-
       })
-
-   /*  d3.select(".wrapper")
-      .attr("height", height)
-      .attr("width", width) */
-
-    /* infoButton.on("click", function () {
-      infoPage
-        .transition()
-        .duration(5000)
-        .style("visibility", "visible")
-
-      infoButton.style("visibility", "hidden")
-    }) */
     
     mapboxgl.accessToken = "pk.eyJ1IjoidmFsYmF1ZXIiLCJhIjoiY2tnaWhndHVlMWZneDJzcnJkemRqeGZzeiJ9.01wZ91f4C1ngeht7WUAdKQ"
 

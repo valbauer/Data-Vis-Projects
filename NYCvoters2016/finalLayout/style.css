@@ -1,0 +1,241 @@
+body {
+    /* ref: https://fonts.google.com/specimen/Source+Sans+Pro?selection.family=Source+Sans+Pro */
+    font-family: "Montserrat", sans-serif;
+    background-color: whitesmoke;
+  }
+
+.grid {
+    position: absolute;
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-columns: .5fr repeat(2, 1fr) .15fr repeat(4, 1fr) .5fr;
+    grid-template-rows: .25fr repeat(12, 1fr) .25fr;
+    grid-template-areas: 
+        ". . . . . . . . ."
+        ". . . . nav nav nav nav ."
+        ". . . . select select select select ."
+        ". title title . viz viz viz viz ."
+        ". question question . viz viz viz viz ."
+        ". question question . viz viz viz viz ."
+        ". desc desc . viz viz viz viz ."
+        ". desc desc . viz viz viz viz ."
+        ". desc desc . viz viz viz viz ."
+        ". desc desc . viz viz viz viz ."
+        ". . . . viz viz viz viz ."
+        ". . . . viz viz viz viz ."
+        ". . . . viz viz viz viz ."
+        " . . . . . . . . .";
+}
+
+.nav {
+    grid-area: nav;
+    align-self: center; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+}
+
+img.distroIcon {
+    align-self: center;
+    justify-self: center;
+    grid-row: 1;
+    grid-column-start: 1 / 2;
+}
+text.distroIcon {
+    text-align: center;
+    justify-self: center;
+    grid-row: 2;
+    grid-column: 1 /  2;
+}
+.nav img.mapIcon {
+    align-self: center;
+    justify-self: center;
+    grid-row: 1;
+    grid-column: 2 / 3;
+}
+span.mapIcon {
+    align-self: center;
+    justify-self: center;
+    grid-row: 2;
+    grid-column: 2 / 3;
+}
+img.aboutIcon {
+    align-self: center;
+    justify-self: center;
+    grid-row: 1;
+    grid-column: 3 / 4;
+}
+span.aboutIcon {
+    align-self: center;
+    justify-self: center;
+    grid-row: 2;
+    grid-column: 3 / 4;
+}
+
+#scatterplot {
+    position: relative;
+    font-family: "Montserrat", sans-serif;
+    grid-area: viz;
+}
+
+#map {
+    font-family: "Montserrat", sans-serif;
+    grid-area: viz;
+    visibility: hidden;
+}
+
+.about {
+    font-family: "Montserrat", sans-serif;
+    grid-area: viz;
+    visibility: hidden;
+}
+
+.about p {
+    margin: 5px 0px;
+    font-size: 1.5em;
+    align-self: start;
+}
+
+
+h1 {
+    font-weight: bold;
+    font-size: 2em;
+    margin: 0;
+    grid-area: title;
+    padding-bottom: 2px;
+    text-align: left;
+    font-variant: small-caps;
+}
+h2 {
+    text-align: left;
+    font-size: 1.25em;
+    padding: 2px;
+    grid-area: question;
+    align-self: center;
+}
+h3.distributionDesc {
+    font-weight: lighter;
+    grid-area: desc;
+    align-self: start;
+    margin: 0;
+}
+h3.mapDesc {
+    font-weight: lighter;
+    grid-area: desc;
+    margin: 0;
+    align-self: start;
+    visibility: hidden;
+}
+.selections {
+    /* display: flex; */
+    justify-content: space-around;
+    grid-area: select;
+    align-self: center;
+    justify-self: center;
+}
+
+#toggleMap {
+    display: flex;
+    justify-content: space-evenly;
+    grid-area: select;
+    align-self: center;
+    visibility: hidden;
+}
+
+.yAxis {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1em;
+}
+
+.yAxisText {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1em;
+    transform: rotate(-180deg);
+    writing-mode: vertical-lr;
+    text-anchor: start;    
+}
+
+.xAxis {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1em;
+}
+.medianText {
+    text-anchor: middle;
+    font-weight: bolder;
+    font-size: 1.5em;
+    pointer-events: none;
+}   
+.medianTextCircle {
+    fill: whitesmoke;
+    opacity: .65;
+    pointer-events: none;
+}
+
+.map {
+    position: absolute;
+    z-index: 1;   
+}
+
+path {
+    stroke-width: .25;
+    cursor: default;
+}
+
+path:hover {
+    stroke: black;
+    stroke-width: 2;
+}
+
+path.trump:hover {
+    fill: rgb(189, 9, 9);
+    stroke: white;
+    stroke-width: 3;
+}
+
+path.clinton:hover {
+    fill: darkblue;
+    stroke: white;
+    stroke-width: 3;
+}
+
+path.clinton:hover {
+    fill: darkblue;
+    stroke: white;
+    stroke-width: 3;
+}
+
+.tooltip {
+    font-family: "Montserrat", sans-serif;
+    display: block;
+    height: fit-content;
+    max-width: 18em;
+    background-color: white; 
+    opacity: 0.8;
+    pointer-events: none;
+    padding: 5px;
+    border: .5px solid black;
+    z-index: 1;
+    
+}
+
+.legend {
+    position: absolute;
+    z-index: 2;
+    border-style: solid;
+    border-width: 3px;
+    border-color: white;
+    background-color: white;
+}
+
+.legendText {
+    text-anchor: middle;
+    font-weight: bold;
+    font-size: 1.15em;
+    padding: 2px;
+}
+
+.legendRects {
+    stroke-width: 5px;
+}
+

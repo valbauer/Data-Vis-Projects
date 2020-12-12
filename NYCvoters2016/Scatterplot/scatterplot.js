@@ -22,9 +22,9 @@ const yScale = d3.scaleLinear()
         .domain([26, 100])
         .range([height - margin.bottom, margin.top])
         
-const svg = d3.select("#scatterplot ")
+const svg = d3.select("#scatterplot")
         .append("svg")
-        .attr("class", "dots")
+        .attr("class", "scatterplot")
         .attr("width", width)
         .attr("height", height);
 
@@ -318,12 +318,15 @@ function draw() {
             .call(selection => 
                 selection.transition()
                 .duration(250))
+            
+            lines.call(enter => enter.append("text")
+                )
                 
             lines.on("mouseover", function (d) {
                 const [mx,my] = [d3.event.pageX, d3.event.pageY]
                 tooltip.html(
                     `
-                    Median age of group is: ${median}.`
+                    Median age of group is ${median}.`
                 )
                 .transition()
                 .duration(150)
