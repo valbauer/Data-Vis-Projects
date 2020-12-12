@@ -310,7 +310,7 @@ function draw() {
                 .attr("r", 1.5)
                 .attr("opacity", .35)
                 .attr("fill", d => {
-                    if (d.age_2016 = 0) return "none";
+                    if (d.age_2016 === 0) return "none";
                     else if (d.party_gen === "Democrat") return "#0571b0";
                     else if (d.party_gen === "Republican") return "#ca0020";
                     else return "DarkMagenta";
