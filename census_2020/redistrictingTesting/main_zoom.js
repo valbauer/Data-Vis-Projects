@@ -168,7 +168,7 @@ function init () {
     // 'this.value' holds the dropdown value a user just selected
     state.selectedGeography = this.value
     console.log("new geography is", this.value);
-    g.selectAll(".dist").remove();
+    g.selectAll("#dist").remove();
     draw();
   });
 
@@ -293,7 +293,8 @@ function init () {
           .data(topojson.feature(state.cd_geojson, state.cd_geojson.objects.tl_2016_us_cd116_wgs84).features)
           .join(enter => enter.append("path")
             .attr("d", path)
-            .attr("class", "dist")
+            .attr("id", "dist")
+            .attr("class", d => `cd_${d.properties.GEOID}`)
             .attr("fill", d => {
               if (state.selectedVariable === 'pct_tot_pop_change') {
                 return colorScale(d.properties.pct_tot_pop_change)
@@ -359,7 +360,8 @@ function init () {
           .data(topojson.feature(state.sldu_geojson, state.sldu_geojson.objects.sldu_2019_wgs84).features)
           .join(enter => enter.append("path") 
             .attr("d", path)
-            .attr("class", "dist")
+            .attr("id", "dist")
+            .attr("class", d => `sldu_${d.properties.GEOID}`)
             .attr("fill", d => {
               const geoid = d.properties.GEOID
               const sldu_variable = state.sldu_csv.find(sldu => sldu.geoid.toString().padStart(5, '0') === geoid)
@@ -427,7 +429,8 @@ function init () {
         .data(topojson.feature(state.sldl_geojson, state.sldl_geojson.objects.sldl_2019_wgs84).features)
         .join(enter => enter.append("path")
           .attr("d", path)
-          .attr("class", "dist")
+          .attr("id", "dist")
+          .attr("class", d => `sldl_${d.properties.GEOID}`)
             .attr("fill", d => {
             const geoid = d.properties.GEOID
             const sldl_variable = state.sldl_csv.find(sldl => sldl.geoid.toString().padStart(5, '0') === geoid)
