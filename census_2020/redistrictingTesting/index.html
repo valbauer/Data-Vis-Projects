@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>District Comparison</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Comparing Race and Ethnicity using 2008-2012 and 2015-2019 ACS estimates by Legislative district</h1>
+    <label for="dropdownGeography">Choose geography:</label>
+    <select id="dropdownGeography" name="dropdownGeography"></select>
+
+    <label for="dropdownVariable">Choose variable:</label>
+    <select id="dropdownVariable" name="dropdownVariable"></select>
+    <div id="d3-container">
+      <div id="legend"></div>
+    </div>
+    <script src="../../lib/d3.js"></script>
+    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    <script type="module" src="main_zoom.js"></script>
+  </body>
+</html>

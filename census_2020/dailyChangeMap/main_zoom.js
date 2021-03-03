@@ -302,7 +302,7 @@ function init () {
 
     //Group county rates by date
     groupedCounties = d3.group(state.rates, d => d.dateString)
-    
+    console.log(groupedCounties)
     dates = Array.from(new Set(state.rates.map(d => d.dateString)))  
 
     slider
@@ -383,6 +383,7 @@ function init () {
     console.log("Drawing date: ", dates[state.dateIndex])
     
     rateLookup = new Map(groupedCounties.get(dates[state.dateIndex]).map(d => [d.fips, d.crrall]))
+    console.log(rateLookup)
     fsrr2010Lookup = new Map(groupedCounties.get(dates[0]).map(d => [d.fips, d.fsrr2010]))
     
     counties
