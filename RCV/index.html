@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>NYC 2021</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Montserrat&family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />   -->
+  </head>
+  <body>  
+   <h2>Ranked Choice Voting NYC Democratic Primary 2021</h2>
+   <h3>Each dot below represents a ballot that has been randomly placed within the election district in which it was cast.
+     The color of the dot corresponds to the current top-ranked candidate on the ballot. Colors will change each round 
+      if the top-ranked candidate on the ballot is eliminated.
+   </h3>
+      <div id="legend"></div>
+      <div id="roundButtons">
+        <form>
+          <input type="radio" id="inital" value="First Choice">
+          <label for="initial">First Choice</label>
+          <input type="radio" id="round1" value="Round 1">
+          <label for="round1">Round 1</label>
+          <input type="radio" id="round2" value="Round 2">
+          <label for="round2">Round 2</label>
+          <input type="radio" id="round3" value="Round 3">
+          <label for="round3">Round 3</label>
+          <input type="radio" id="round4" value="Round 4">
+          <label for="round4">Round 4</label>
+          <input type="radio" id="round5" value="Round 5">
+          <label for="round5">Round 5</label>
+          <input type="radio" id="round6" value="Round 6">
+          <label for="round6">Round 6</label>
+          <input type="radio" id="round7" value="Round 7">
+          <label for="round7">Round 7</label>
+          <input type="radio" id="round8" value="Round 8">
+          <label for="round8">Round 8</label>
+          <input type="radio" id="round9" value="Round 9">
+          <label for="round9">Round 9</label>
+        </form>
+      </div>
+    <div id="d3-container"> </div>
+    </div>
+    <script src="../../lib/d3.js"></script>
+    <script type="module" src="main.js"></script>
+
+  </body>
+</html>
